@@ -15,9 +15,9 @@ class BaseModel:
                 if key == "id":
                     self.id = kwargs.get(key)
                 if key == "created_at":
-                    self.created_at = kwargs.get(key)
+                    self.created_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
                 if key == "updated_at":
-                    self.update_at = kwargs.get(key)
+                    self.update_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
                 if key == "my_number":
                     self.my_number = kwargs.get(key)
                 if key == "name":
