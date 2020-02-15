@@ -8,14 +8,26 @@ from uuid import uuid4
 class BaseModel:
     """ defines all common attributes/methods for other classes """
 
-    my_number = 0
-    name = ""
-
-    def __init__(self):
+    def __init__(self, *args, **kwargs):
         """" constructor """
-        self.id = str(uuid4())
-        self.created_at = (datetime.now()).isoformat()
-        self.update_at = (datetime.now()).isoformat()
+        if kwargs:
+            for key, value in kwargs.items():
+                if key == "id" and value is not "":
+                    self.id = kwargs.get(key)
+                else:
+                    self.id = str(uuid4())
+                if key == "created_at":
+                    self.created_at = kwargs.get(key)
+                if key == "updated_at":
+                    self.update_at = kwargs.get(key)
+                if key == "my_number":
+                    self.my_number = kwargs.get(key)
+                if key == "name":
+                    self.name = kwargs.get(key)
+        else:
+            self.id = str(uuid4())
+            self.created_at = datetime.now()
+            self.updated_at = datetime.now()
 
     def save(self):
          """ Update the update_at"""
@@ -31,8 +43,8 @@ class BaseModel:
         my_dict = {}
         my_dict['my_number'] = self.my_number
         my_dict['name'] = self.name
-        my_dict['created_at'] = self.created_at
-        my_dict['updated_at'] = self.updated_at
+        my_dict['created_at'] = (self.created_at).isoformat()
+        my_dict['updated_at'] = (self.updated_at).isoformat()
         my_dict['__class__'] = self.__class__.__name__
         my_dict['id'] = self.id
         return(my_dict)
