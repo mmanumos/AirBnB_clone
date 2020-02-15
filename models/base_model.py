@@ -12,14 +12,12 @@ class BaseModel:
         """" constructor """
         if kwargs:
             for key, value in kwargs.items():
-                if key == "id" and value is not "":
+                if key == "id":
                     self.id = kwargs.get(key)
-                else:
-                    self.id = str(uuid4())
                 if key == "created_at":
-                    self.created_at = kwargs.get(key)
+                    self.created_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
                 if key == "updated_at":
-                    self.update_at = kwargs.get(key)
+                    self.update_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
                 if key == "my_number":
                     self.my_number = kwargs.get(key)
                 if key == "name":
