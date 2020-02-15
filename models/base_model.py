@@ -7,42 +7,12 @@ from uuid import uuid4
 
 class BaseModel:
     """ defines all common attributes/methods for other classes """
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args, **wkargs):
         """" constructor """
-        if len(kwargs) is 0:
-            self.id = str(uuid4())
-            self.created_at = datetime.now()
-            self.update_at = datetime.now()
-            models.storage.new(self)
-        else:
-            for key, value in kwargs.items():
-                if key == "id":
-                    self.id = kwargs.get(key)
-                if key == "created_at":
-                    self.created_at = datetime.strptime(kwargs.get(key),
-                                                        '%Y-%m-%dT%H:%M:%S.%f')
-                if key == "updated_at":
-                    self.updated_at = datetime.strptime(kwargs.get(key),
-                                                        '%Y-%m-%dT%H:%M:%S.%f')
-                if key == "my_number":
-                    self.my_number = kwargs.get(key)
-                if key == "name":
-                    self.name = kwargs.get(key)
+        name = ""
+        my_number = 0
 
     def __str__(self):
-        """ __str__ """
+        """ define str output """
         return ("[{}] ({}) {}".format(self.__class__.__name__,
-                                      self.id, self.__dict__))
-
-    def save(self):
-        """ Update the update_at """
-        self.updated_at = datetime.now()
-        models.storage.save()
-
-    def to_dict(self):
-        """ Returns a dictionary """
-        my_dict = self.__dict__.copy()
-        my_dict['created_at'] = self.created_at.isoformat()
-        my_dict['updated_at'] = self.updated_at.isoformat()
-        my_dict['__class__'] = self.__class__.__name__
-        return(my_dict)
+                                      self.name, self.my_number))
