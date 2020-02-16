@@ -2,6 +2,7 @@
 """ shebang line - defines where the interpreter is located """
 from datetime import datetime
 from uuid import uuid4
+from models import storage
 """ import moduls """
 
 
@@ -26,6 +27,7 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
+            storage.new(self)
 
     def __str__(self):
         """ define str output """
@@ -35,6 +37,7 @@ class BaseModel:
     def save(self):
          """ Update the update_at"""
          self.updated_at = datetime.now()
+         storage.save()
 
     def to_dict(self):
         """ Returns a dictionary """
