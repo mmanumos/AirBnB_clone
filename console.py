@@ -3,19 +3,22 @@
 import cmd
 """ import moduls """
 
-class hbnbShell(cmd.Cmd):
-    """ Command processor """
-    prompt = '(hbnb)'
 
-    # ----- basic hbnd commands -----
-    def do_EOF(self, arg):
-        """ EOF hbnbShell """
+class HBNBCommand(cmd.Cmd):
+    """ class with methods to work into the commands line """
+    prompt = "(hbnb) "
+
+    def do_quit(self, line):
+        """ Quit command to exit the program """
         return True
 
-    # ----- basic hbnd commands -----
-    def do_quit(self, arg):
-        """ Quit hbnbShell """
+    def do_EOF(self, line):
+        """ EOF command to exit the program """
         return True
 
-if __name__ == '__main__':
-    hbnbShell().cmdloop()
+    def emptyline(self):
+        """ When the comand line is empty and it's typed """
+        pass
+
+""" Executed the loop for Promp by default """
+HBNBCommand().cmdloop()
