@@ -2,7 +2,7 @@
 """ shebang line - defines where the interpreter is located """
 from datetime import datetime
 from uuid import uuid4
-from models import storage
+import models
 """ import moduls """
 
 
@@ -10,7 +10,7 @@ class BaseModel:
     """ defines all common attributes/methods for other classes """
 
     def __init__(self, *args, **kwargs):
-        """" constructor """
+        """" constructor with public instance attributes """
         if kwargs:
             for key, value in kwargs.items():
                 if key == "id":
@@ -18,7 +18,7 @@ class BaseModel:
                 if key == "created_at":
                     self.created_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
                 if key == "updated_at":
-                    self.update_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
+                    self.updated_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
                 if key == "my_number":
                     self.my_number = kwargs.get(key)
                 if key == "name":
@@ -27,22 +27,22 @@ class BaseModel:
             self.id = str(uuid4())
             self.created_at = datetime.now()
             self.updated_at = datetime.now()
-            storage.new(self)
+            models.storage.new(self)
 
     def __str__(self):
-        """ define str output """
+        """ method that define print """
         return ("[{}] ({}) {}".format(self.__class__.__name__,
                                       self.id, self.__dict__))
 
     def save(self):
-         """ Update the update_at"""
+         """ method that updates the public instance attribute updated_at """
          self.updated_at = datetime.now()
-         storage.save()
+         models.storage.save()
 
     def to_dict(self):
-        """ Returns a dictionary """
+        """ method that returns a dictionary containing all keys/values of __dict__ of the instance """
         my_dict = self.__dict__.copy()
+        my_dict['__class__'] = self.__class__.__name__
         my_dict['created_at'] = (self.created_at).isoformat()
         my_dict['updated_at'] = (self.updated_at).isoformat()
-        my_dict['__class__'] = self.__class__.__name__
         return(my_dict)

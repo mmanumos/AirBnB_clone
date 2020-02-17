@@ -1,6 +1,7 @@
 #!/usr/bin/python3
+""" shebang line - defines where the interpreter is located """
 import cmd
-
+""" import moduls """
 
 class hbnbShell(cmd.Cmd):
     """ Command processor """
