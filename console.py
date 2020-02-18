@@ -1,20 +1,58 @@
 #!/usr/bin/python3
 """ shebang line - defines where the interpreter is located """
-""" contains the entry point of the command interpreter """
 import cmd
+import models
+from models.base_model import BaseModel
 """ import moduls """
 
-class HBNBCommand(cmd.Cmd):
-    """ command processor """
-    prompt = '(hbnb)'
 
-    def do_quit(self, arg):
+class HBNBCommand(cmd.Cmd):
+    """ class with methods to work into the commands line """
+    prompt = "(hbnb) "
+    list_class = ["BaseModel"]
+    list_err = ["** class name missing **", "** class doesn't exist **", "** instance id missing **", "** no instance found **" ]
+    
+    def do_create(self, line):
+        """ Create a new instance of BaseModel """
+        my_list = list(line.split())
+        if line == "":
+            print(self.list_err[0])
+        elif my_list[0] == "BaseModel":
+            obj = BaseModel()
+            print(obj.id)
+            obj.save()
+        else:
+            print(self.list_err[1])
+
+    def do_show(self, line):
+        """ Show object by id """
+        my_list = list(line.split())
+        if line == "":
+            print(self.list_err[0])
+        elif my_list[0] not in self.list_class:
+            print(self.list_err[1])
+        elif len(my_list) == 1:
+            print(self.list_err[2])
+        else:
+            my_dic = models.storage.all()
+            if ("BaseModel." + my_list[1]) in my_dic.keys():
+                print(my_dic["BaseModel." + my_list[1]])
+            else:
+                print(self.list_err[3])
+
+            
+            
+    def do_quit(self, line):
         """ Quit command to exit the program """
         return True
 
-    def do_EOF(self, arg):
+    def do_EOF(self, line):
         """ EOF command to exit the program """
         return True
 
-if __name__ == '__main__':
-    HBNBCommand().cmdloop()
+    def emptyline(self):
+        """ When the comand line is empty and it's typed """
+        pass
+
+""" Executed the loop for Promp by default """
+HBNBCommand().cmdloop()

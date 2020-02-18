@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ shebang line - defines where the interpreter is located """
 import json
+import os.path
 from ..base_model import BaseModel
 """ import moduls """
 
@@ -16,23 +17,15 @@ class FileStorage:
 
     def new(self, obj):
         """ Public instance method that sets in __objects the obj with key <obj class name>.id """
-        FileStorage.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj
+        FileStorage.__objects["{}.{}".format(obj.__class__.__name__, obj.id)] = obj.to_dict()
 
     def save(self):
         """ Public instance method that serializes __objects to the JSON file """
-        nd = {}
-        for key, value in self.__objects.items():
-            nd.update({key: value.to_dict()})
-            jfile = json.dumps(nd)
-            with open(self.__file_path, "a") as f:
-                f.write(jfile)
+        with open(FileStorage.__file_path, "w") as f:
+            f.write(json.dumps(FileStorage.__objects))
 
     def reload(self):
         """ Public instance method that deserializes the JSON file to __objects """
-        try:
-            with open(self.__file_path, "r") as f:
-                for key, value in (json.load(f)).items():
-                    value = eval(value["__class__"])(**value)
-                    self.__objects[key] = value
-        except:
-            pass
+        if os.path.isfile(FileStorage.__file_path):
+            with open(FileStorage.__file_path, "r") as f:
+                FileStorage.__objects = json.loads(f.read())
