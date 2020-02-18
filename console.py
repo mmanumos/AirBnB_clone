@@ -3,13 +3,14 @@
 import cmd
 import models
 from models.base_model import BaseModel
+from models.user import User
 """ import moduls """
 
 
 class HBNBCommand(cmd.Cmd):
     """ class with methods to work into the commands line """
     prompt = "(hbnb) "
-    list_class = ["BaseModel"]
+    list_class = ["BaseModel", "User"]
     list_err = ["** class name missing **", "** class doesn't exist **",
                 "** instance id missing **", "** no instance found **",
                 "** attribute name missing **", "** value missing **"]
@@ -19,8 +20,8 @@ class HBNBCommand(cmd.Cmd):
         my_list = list(line.split())
         if line == "":
             print(self.list_err[0])
-        elif my_list[0] == "BaseModel":
-            obj = BaseModel()
+        elif my_list[0] in self.list_class:
+            obj = eval(my_list[0])()
             print(obj.id)
             obj.save()
         else:
@@ -37,8 +38,8 @@ class HBNBCommand(cmd.Cmd):
             print(self.list_err[2])
         else:
             my_dic = models.storage.all()
-            if ("BaseModel." + my_list[1]) in my_dic.keys():
-                print(my_dic["BaseModel." + my_list[1]])
+            if (my_list[0] + "." + my_list[1]) in my_dic.keys():
+                print(my_dic[my_list[0] + "." + my_list[1]])
             else:
                 print(self.list_err[3])
 
@@ -53,8 +54,8 @@ class HBNBCommand(cmd.Cmd):
             print(self.list_err[2])
         else:
             my_dic = models.storage.all()
-            if ("BaseModel." + my_list[1]) in my_dic.keys():
-                del my_dic["BaseModel." + my_list[1]]
+            if (my_list[0] + "." + my_list[1]) in my_dic.keys():
+                del my_dic[my_list[0] + "." + my_list[1]]
                 models.storage.save()
             else:
                 print(self.list_err[3])
@@ -62,10 +63,14 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self,line):
         """ shows all objects created """
         my_list = list(line.split())
-        if len(line) == 0 or my_list[0] in self.list_class:
+        if len(line) == 0:
             print(models.storage.all())
-        else:
+        elif my_list[0] not in self.list_class:
             print(self.list_err[1])
+        else:
+            for key, value in models.storage.all().items():
+                if my_list[0] in key:
+                    print((models.storage.all())[key])
 
     def do_update(self,line):
         """ update an object by className and id, with attribute and value """
@@ -78,13 +83,13 @@ class HBNBCommand(cmd.Cmd):
         elif len(my_list) < 2:
                 print(self.list_err[2])
         else:
-            if ("BaseModel." + my_list[1]) in my_dic.keys():
+            if (my_list[0] + "." + my_list[1]) in my_dic.keys():
                 if len(my_list) < 3:
                     print(self.list_err[4])
                 elif len(my_list) < 4:
                     print(self.list_err[5])
                 else:
-                    obj_dic = my_dic["BaseModel." + my_list[1]]
+                    obj_dic = my_dic[my_list[0] + "." + my_list[1]]
                     obj_dic[my_list[2]] = my_list[3]
                     models.storage.save()
             else:
