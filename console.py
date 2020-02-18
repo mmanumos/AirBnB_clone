@@ -4,13 +4,19 @@ import cmd
 import models
 from models.base_model import BaseModel
 from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
 """ import moduls """
 
 
 class HBNBCommand(cmd.Cmd):
     """ class with methods to work into the commands line """
     prompt = "(hbnb) "
-    list_class = ["BaseModel", "User"]
+    list_class = ["BaseModel", "User", "State", "City",
+                  "Amenity", "Place", "Review"]
     list_err = ["** class name missing **", "** class doesn't exist **",
                 "** instance id missing **", "** no instance found **",
                 "** attribute name missing **", "** value missing **"]
