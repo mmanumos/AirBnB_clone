@@ -21,20 +21,18 @@ class FileStorage:
     def save(self):
         """ Public instance method that serializes __objects to the JSON file """
         nd = {}
-        for key, value in FileStorage.__objects.items():
+        for key, value in self.__objects.items():
             nd.update({key: value.to_dict()})
             jfile = json.dumps(nd)
-            with open(FileStorage.__file_path, "a") as f:
+            with open(self.__file_path, "a") as f:
                 f.write(jfile)
 
     def reload(self):
         """ Public instance method that deserializes the JSON file to __objects """
-        md = {"BaseModel": BaseModel}
-        jfile = ""
         try:
-            with open(FileStorage.__file_path, "r") as f:
-                jfile = json.loads(f.read())
-                for i in jfile:
-                    FileStorage.__objects[i] = md[jfile[i]['__class'](**jfile[i])]
+            with open(self.__file_path, "r") as f:
+                for key, value in (json.load(f)).items():
+                    value = eval(value["__class__"])(**value)
+                    self.__objects[key] = value
         except:
             pass
