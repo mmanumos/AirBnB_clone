@@ -20,7 +20,7 @@ class HBNBCommand(cmd.Cmd):
     list_err = ["** class name missing **", "** class doesn't exist **",
                 "** instance id missing **", "** no instance found **",
                 "** attribute name missing **", "** value missing **"]
-    
+
     def do_create(self, line):
         """ Create a new instance of BaseModel """
         my_list = list(line.split())
@@ -49,7 +49,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print(self.list_err[3])
 
-    def do_destroy(self,line):
+    def do_destroy(self, line):
         """ delete object by id """
         my_list = list(line.split())
         if line == "":
@@ -66,7 +66,7 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print(self.list_err[3])
 
-    def do_all(self,line):
+    def do_all(self, line):
         """ shows all objects created """
         my_list = list(line.split())
         if len(line) == 0:
@@ -78,7 +78,7 @@ class HBNBCommand(cmd.Cmd):
                 if my_list[0] in key:
                     print((models.storage.all())[key])
 
-    def do_update(self,line):
+    def do_update(self, line):
         """ update an object by className and id, with attribute and value """
         my_list = list(line.split())
         my_dic = models.storage.all()
@@ -100,7 +100,7 @@ class HBNBCommand(cmd.Cmd):
                     models.storage.save()
             else:
                 print(self.list_err[3])
-                                   
+
     def do_quit(self, line):
         """ Quit command to exit the program """
         return True
