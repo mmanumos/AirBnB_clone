@@ -13,16 +13,10 @@ class BaseModel:
         """" constructor with public instance attributes """
         if kwargs:
             for key, value in kwargs.items():
-                if key == "id":
-                    self.id = kwargs.get(key)
-                if key == "created_at":
-                    self.created_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
-                if key == "updated_at":
-                    self.updated_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
-                if key == "my_number":
-                    self.my_number = kwargs.get(key)
-                if key == "name":
-                    self.name = kwargs.get(key)
+                if key in ["created_at", "updated_at"]:
+                    value = datetime.strptime(value,'%Y-%m-%dT%H:%M:%S.%f')
+                if key not in ['__class__']:
+                    setattr(self, key, value)
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
@@ -36,6 +30,7 @@ class BaseModel:
     def save(self):
          """ method that updates the public instance attribute updated_at """
          self.updated_at = datetime.now()
+         models.storage.new(self)
          models.storage.save()
 
     def to_dict(self):
