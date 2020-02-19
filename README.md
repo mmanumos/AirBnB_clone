@@ -1,20 +1,24 @@
 # AirBnB clone - The console
-xxx
 
 ## Description of the project:
 The goal of the project is to deploy on your server a simple copy of the AirBnB website.
 
 ## Description of the command interpreter:
 - How to start it
+```bash
+./console.py
+```
 - How to use it
+```
+
+```
 - Examples
 ```
-example
 ```
 
 ## Developers:
-- Javier Patarroyo
 - Manuel Mosquera
+- Javier Patarroyo
 
 --------------------------------
 Holberton School
