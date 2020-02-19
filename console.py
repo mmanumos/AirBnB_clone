@@ -67,21 +67,21 @@ class HBNBCommand(cmd.Cmd):
                 print(self.list_err[3])
 
     def do_all(self, line):
-        """ shows all objects created """
-        my_list = list(line.split())
-        if len(line) == 0:
-            all_objs = models.storage.all()
-            list_obj = []
-            for obj_id in all_objs.keys():
-                obj = all_objs[obj_id]
-                list_obj.append("{""}".format(obj))
-            print(list_obj)
-        elif my_list[0] not in self.list_class:
-            print(self.list_err[1])
+        """Function that displays all class instances of given argument or all
+        if no argument given"""
+        dict_temp = models.storage.all()
+        if line is "":
+            for instance_key, instance_obj in dict_temp.items():
+                print(instance_obj)
         else:
-            for key, value in models.storage.all().items():
-                if my_list[0] in key:
-                    print(["{""}".format((models.storage.all())[key])])
+            my_list = line.split()
+            if my_list[0] not in self.list_class:
+                print(self.list_err[1])
+            else:
+                for instance_key, instance_obj in dict_temp.items():
+                    obj = instance_obj.to_dict()
+                    if obj['__class__'] == my_list[0]:
+                        print(instance_obj)
 
     def do_update(self, line):
         """ update an object by className and id, with attribute and value """
