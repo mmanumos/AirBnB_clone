@@ -74,14 +74,14 @@ class HBNBCommand(cmd.Cmd):
             list_obj = []
             for obj_id in all_objs.keys():
                 obj = all_objs[obj_id]
-                list_obj.append("{}".format(obj))
+                list_obj.append("{""}".format(obj))
             print(list_obj)
         elif my_list[0] not in self.list_class:
             print(self.list_err[1])
         else:
             for key, value in models.storage.all().items():
                 if my_list[0] in key:
-                    print((models.storage.all())[key])
+                    print(["{""}".format((models.storage.all())[key])])
 
     def do_update(self, line):
         """ update an object by className and id, with attribute and value """
