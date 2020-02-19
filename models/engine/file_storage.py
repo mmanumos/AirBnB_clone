@@ -3,6 +3,12 @@
 import json
 import os.path
 from ..base_model import BaseModel
+from ..user import User
+from ..state import State
+from ..place import Place
+from ..amenity import Amenity
+from ..city import City
+from ..review import Review
 """ import moduls """
 
 
@@ -20,18 +26,24 @@ class FileStorage:
     def new(self, obj):
         """ Public instance method that sets in __objects
         the obj with key <obj class name>.id """
-        FileStorage.__objects["{}.{}".format(obj.__class__.__name__,
-                                             obj.id)] = obj.to_dict()
+        key = "{}.{}".format(obj.__class__.__name__,obj.id)
+        FileStorage.__objects[key] = obj
 
     def save(self):
         """ Public instance method that serializes
         __objects to the JSON file """
-        with open(FileStorage.__file_path, "w") as f:
-            f.write(json.dumps(FileStorage.__objects))
+        dict_temp = {}        
+        for key, value in FileStorage.__objects.items():
+            dict_temp[key] = value.to_dict()
+            with open(FileStorage.__file_path, "w") as f:
+                f.write(json.dumps(dict_temp))
 
     def reload(self):
         """ Public instance method that deserializes
         the JSON file to __objects """
         if os.path.isfile(FileStorage.__file_path):
             with open(FileStorage.__file_path, "r") as f:
-                FileStorage.__objects = json.loads(f.read())
+                dict_temp = json.loads(f.read())
+                for key, value in dict_temp.items():
+                    obj = eval(value['__class__'])(**value)
+                    FileStorage.__objects[key] = obj
