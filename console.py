@@ -75,7 +75,6 @@ class HBNBCommand(cmd.Cmd):
             for obj_id in all_objs.keys():
                 obj = all_objs[obj_id]
                 list_obj.append("{}".format(obj))
-                
             print(list_obj)
         elif my_list[0] not in self.list_class:
             print(self.list_err[1])
@@ -102,7 +101,7 @@ class HBNBCommand(cmd.Cmd):
                     print(self.list_err[5])
                 else:
                     obj_dic = my_dic[my_list[0] + "." + my_list[1]]
-                    setattr(obj_dic, my_list[2] ,my_list[3])
+                    setattr(obj_dic, my_list[2], my_list[3])
                     models.storage.save()
             else:
                 print(self.list_err[3])

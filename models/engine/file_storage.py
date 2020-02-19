@@ -26,13 +26,13 @@ class FileStorage:
     def new(self, obj):
         """ Public instance method that sets in __objects
         the obj with key <obj class name>.id """
-        key = "{}.{}".format(obj.__class__.__name__,obj.id)
+        key = "{}.{}".format(obj.__class__.__name__, obj.id)
         FileStorage.__objects[key] = obj
 
     def save(self):
         """ Public instance method that serializes
         __objects to the JSON file """
-        dict_temp = {}        
+        dict_temp = {}
         for key, value in FileStorage.__objects.items():
             dict_temp[key] = value.to_dict()
             with open(FileStorage.__file_path, "w") as f:
