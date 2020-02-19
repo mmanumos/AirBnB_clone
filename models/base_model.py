@@ -13,16 +13,10 @@ class BaseModel:
         """" constructor with public instance attributes """
         if kwargs:
             for key, value in kwargs.items():
-                if key == "id":
-                    self.id = kwargs.get(key)
-                if key == "created_at":
-                    self.created_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
-                if key == "updated_at":
-                    self.updated_at = datetime.strptime(kwargs.get(key),'%Y-%m-%dT%H:%M:%S.%f')
-                if key == "my_number":
-                    self.my_number = kwargs.get(key)
-                if key == "name":
-                    self.name = kwargs.get(key)
+                if key in ["created_at", "updated_at"]:
+                    value = datetime.strptime(value, '%Y-%m-%dT%H:%M:%S.%f')
+                if key not in ['__class__']:
+                    setattr(self, key, value)
         else:
             self.id = str(uuid4())
             self.created_at = datetime.now()
@@ -31,15 +25,18 @@ class BaseModel:
 
     def __str__(self):
         """ method that define print """
-        return ("[{}] ({}) {}".format(self.__class__.__name__, self.id, self.__dict__))
+        return ("[{}] ({}) {}".format(self.__class__.__name__, self.id,
+                                      self.__dict__))
 
     def save(self):
-         """ method that updates the public instance attribute updated_at """
-         self.updated_at = datetime.now()
-         models.storage.save()
+        """ method that updates the public instance attribute updated_at """
+        self.updated_at = datetime.now()
+        models.storage.new(self)
+        models.storage.save()
 
     def to_dict(self):
-        """ method that returns a dictionary containing all keys/values of __dict__ of the instance """
+        """ method that returns a dictionary containing all keys/values of
+        __dict__ of the instance """
         my_dict = self.__dict__.copy()
         my_dict['__class__'] = self.__class__.__name__
         my_dict['created_at'] = self.created_at.isoformat()
