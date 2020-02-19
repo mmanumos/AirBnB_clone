@@ -1,24 +1,27 @@
 #!/usr/bin/python3
-"""
-Unit tests for Base class
-"""
-
-
+""" shebang line - defines where the interpreter is located """
 import unittest
-from models import storage
-from models.base_model import BaseModel
 import pep8
+import models
+from models.base_model import BaseModel
+""" import moduls """
+class verify_pep8(unittest.TestCase):
+    """ class - PEP 8 validated """
+    def test_pep8(self):
+        """ method - PEP 8 test """
+        check = pep8.Checker("models/engine/file_storage.py", show_source=True)
+        file_error= check.check_all()
 
+class verify_work(unittest.TestCase):
+    """ funcionality test """
 
-class Test_Base(unittest.TestCase):
-    """Base class tests"""
-    def test_validate(self):
-        """ validate the id number, without args """
+    def setUp(self):
+        """ Method called immediately before calling the test method """
         pass
 
-    def test_pep8_conformance(self):
-        """Test that we conform to PEP8."""
-        pep8style = pep8.StyleGuide(quiet=True)
-        result = pep8style.check_files(['models/base_model.py'])
-        self.assertEqual(result.total_errors, 0,
-                         "Found code style errors (and warnings).")
+    def tearDown(self):
+        """ Method called immediately after calling the test method """
+        try:
+            remove("file.json")
+        except:
+            pass
