@@ -5,12 +5,15 @@ import pep8
 import models
 from models.base_model import BaseModel
 """ import moduls """
+
+
 class verify_pep8(unittest.TestCase):
     """ class - PEP 8 validated """
     def test_pep8(self):
         """ method - PEP 8 test """
         check = pep8.Checker("models/engine/file_storage.py", show_source=True)
-        file_error= check.check_all()
+        file_error = check.check_all()
+
 
 class verify_work(unittest.TestCase):
     """ funcionality test """
