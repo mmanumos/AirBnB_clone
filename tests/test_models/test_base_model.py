@@ -2,7 +2,6 @@
 """ shebang line - defines where the interpreter is located """
 import unittest
 import pep8
-import models
 from models.base_model import BaseModel
 """ import moduls """
 
@@ -65,6 +64,13 @@ class verify_work(unittest.TestCase):
     def test_json_file_not_empty(self):
         """ test json file is not empty """
         self.assertTrue('file.json')
+
+    def test_str(self):
+        """ Test method str """
+        b = BaseModel()
+        bprint = b.__str__()
+        self.assertEqual(bprint, "[BaseModel] ({}) {}".format(b.id, b.__dict__))
+        
 
 if __name__ == '__main__':
     unittest.main()
