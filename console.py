@@ -98,8 +98,8 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """ update an object by className and id, with attribute and value """
-        ist = self.splitter(line)
-        ic = models.storage.all()
+        my_list = self.splitter(line)
+        my_dic = models.storage.all()
         if line == "":
             print(self.list_err[0])
         elif my_list[0] not in self.list_class:
