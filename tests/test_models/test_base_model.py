@@ -14,9 +14,6 @@ class verify_pep8(unittest.TestCase):
         check = pep8.Checker("models/base_model.py", show_source=True)
         file_error= check.check_all()
 
-class verify_work(unittest.TestCase):
-    """ funcionality test """
-
     def setUp(self):
         """ Method called immediately before calling the test method """
         self.my_model = BaseModel()

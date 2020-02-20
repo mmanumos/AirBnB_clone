@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 """ shebang line - defines where the interpreter is located """
 import cmd
+import shlex
 import models
 from models.base_model import BaseModel
 from models.user import User
@@ -66,26 +67,38 @@ class HBNBCommand(cmd.Cmd):
             else:
                 print(self.list_err[3])
 
+    def splitter(self, line):
+        """Function to split line into arguments using shlex"""
+        lex = shlex.shlex(line)
+        lex.quotes = '"'
+        lex.whitespace_split = True
+        lex.commenters = ''
+        return list(lex)
+
     def do_all(self, line):
         """Function that displays all class instances of given argument or all
         if no argument given"""
         dict_temp = models.storage.all()
         if line is "":
-            for instance_key, instance_obj in dict_temp.items():
-                print(instance_obj)
+            list_obj = []
+            for obj_id in dict_temp.keys():
+                obj = dict_temp[obj_id]
+                list_obj.append("{}".format(obj))
+            print(list_obj)
         else:
             my_list = line.split()
             if my_list[0] not in self.list_class:
                 print(self.list_err[1])
             else:
-                for instance_key, instance_obj in dict_temp.items():
-                    obj = instance_obj.to_dict()
-                    if obj['__class__'] == my_list[0]:
-                        print(instance_obj)
+                list_obj = []
+                for key, value in dict_temp.items():
+                    if value.__class__.__name__ == my_list[0]:
+                        list_obj.append("{}".format(value))
+                print(list_obj)
 
     def do_update(self, line):
         """ update an object by className and id, with attribute and value """
-        my_list = list(line.split())
+        my_list = self.splitter(line)
         my_dic = models.storage.all()
         if line == "":
             print(self.list_err[0])
@@ -101,7 +114,7 @@ class HBNBCommand(cmd.Cmd):
                     print(self.list_err[5])
                 else:
                     obj_dic = my_dic[my_list[0] + "." + my_list[1]]
-                    setattr(obj_dic, my_list[2], my_list[3])
+                    setattr(obj_dic, my_list[2], my_list[3].replace("\"", ""))
                     models.storage.save()
             else:
                 print(self.list_err[3])
