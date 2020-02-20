@@ -5,18 +5,39 @@ The goal of the project is to deploy on your server a simple copy of the AirBnB 
 
 ## Description of the command interpreter:
 - How to start it
+Start the console by executing the 'console.py' file:
 ```bash
 ./console.py
 ```
-![./console.py](https://drive.google.com/open?id=1CBoqjukCfiMT4iFND8VFuQQCYdWiSFeh)
 - How to use it
+The 'prompt (hbnb)' tells you that the console is ready to receive instructions, type the instruction:
+```bash
+(hbnb) 
 ```
+- Example
+The 'help' command shows all commands available in the console:
+```bash
+(hbnb) help
+```
+- Output:
+```bash
+(hbnb) help
 
-```
-- Examples
-```
-```
+Documented commands (type help <topic>):
+========================================
+EOF  all  create  destroy  help  quit  show  update
 
+(hbnb) 
+```
+- Our commands:
+'EOF': Exit the program.
+'all': Prints all string representation of all instances based or not on the class name.
+'create': Create a new instance.
+'destroy': Deletes an instance based on the class name and id.
+'help': Shows the list of commands available. (The 'help' command is built into Cmd)
+'quit': Exit the program.
+'show': Print the string representation of an instance based on the class name and id.
+'update': Updates an instance based on the class name an id by adding or updating attribute.
 ## Developers:
 - Manuel Mosquera
 - Javier Patarroyo
