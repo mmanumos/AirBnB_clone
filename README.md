@@ -8,6 +8,7 @@ The goal of the project is to deploy on your server a simple copy of the AirBnB 
 ```bash
 ./console.py
 ```
+![./console.py](https://drive.google.com/open?id=1CBoqjukCfiMT4iFND8VFuQQCYdWiSFeh)
 - How to use it
 ```
 
