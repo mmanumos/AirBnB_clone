@@ -36,6 +36,7 @@ EOF  all  create  destroy  help  quit  show  update
 ```
 
 ## Our commands:
+
 - 'EOF': Exit the program.
 ```bash
 (hbnb) EOF
@@ -57,39 +58,40 @@ Shows empty square brackets when not exist instances created.
 Generate an id automatically
 ```bash
 (hbnb) create BaseModel
-079572a6-d77e-4568-82f9-f090d61e45ca
+da7baf7d-6cf9-406b-9360-da1620dfd622
+(hbnb) 
+```
+
+- 'update': Updates an instance based on the class name an id by adding or updating attribute.
+```bash
+(hbnb) update BaseModel da7baf7d-6cf9-406b-9360-da1620dfd622 name "Betty"
+(hbnb) 
+```
+
+- 'show': Print the string representation of an instance based on the class name and id.
+```bash
+(hbnb) show BaseModel da7baf7d-6cf9-406b-9360-da1620dfd622
+[BaseModel] (da7baf7d-6cf9-406b-9360-da1620dfd622) {'id': 'da7baf7d-6cf9-406b-9360-da1620dfd622', 'updated_at': datetime.datetime(2020, 2, 20, 16, 50, 19, 303808), 'created_at': datetime.datetime(2020, 2, 20, 16, 50, 19, 303779), 'name': 'Betty'}
 (hbnb) 
 ```
 
 - 'all': Prints all string representation of all instances based or not on the class name.
 ```bash
 (hbnb) all
-["[BaseModel] (079572a6-d77e-4568-82f9-f090d61e45ca) {'updated_at': datetime.datetime(2020, 2, 20, 16, 38, 47, 970448), 'created_at': datetime.datetime(2020, 2, 20, 16, 38, 47, 970419), 'id': '079572a6-d77e-4568-82f9-f090d61e45ca'}"]
+["[BaseModel] (da7baf7d-6cf9-406b-9360-da1620dfd622) {'id': 'da7baf7d-6cf9-406b-9360-da1620dfd622', 'updated_at': datetime.datetime(2020, 2, 20, 16, 50, 19, 303808), 'created_at': datetime.datetime(2020, 2, 20, 16, 50, 19, 303779), 'name': 'Betty'}", "[BaseModel] (3e33d99d-ae43-4a9c-b2aa-e2c58b2122af) {'id': '3e33d99d-ae43-4a9c-b2aa-e2c58b2122af', 'updated_at': datetime.datetime(2020, 2, 20, 16, 51, 45, 868183), 'created_at': datetime.datetime(2020, 2, 20, 16, 51, 45, 868098)}", "[BaseModel] (6a29fe15-856c-49ab-9774-1637b1f07d8c) {'id': '6a29fe15-856c-49ab-9774-1637b1f07d8c', 'updated_at': datetime.datetime(2020, 2, 20, 16, 51, 55, 606952), 'created_at': datetime.datetime(2020, 2, 20, 16, 51, 55, 606919)}", "[BaseModel] (6ec48ab4-cf1e-44ca-966c-103d454567c2) {'id': '6ec48ab4-cf1e-44ca-966c-103d454567c2', 'updated_at': datetime.datetime(2020, 2, 20, 16, 51, 48, 63180), 'created_at': datetime.datetime(2020, 2, 20, 16, 51, 48, 63146)}"]
 (hbnb) 
 ```
 Now shows all instances created.
 
 - 'destroy': Deletes an instance based on the class name and id.
 ```bash
-(hbnb) destroy BaseModel d87e3490-7937-46c5-910e-2ce3f7b898cf
+(hbnb) destroy BaseModel da7baf7d-6cf9-406b-9360-da1620dfd622
 ```
 
 - 'quit': Exit the program.
 ```bash
 (hbnb) quit
 vagrant@vagrant-ubuntu-trusty-64:~/AirBnB_clone$ 
-```
-
-- 'show': Print the string representation of an instance based on the class name and id.
-```bash
-(hbnb) show BaseModel 079572a6-d77e-4568-82f9-f090d61e45ca
-[BaseModel] (079572a6-d77e-4568-82f9-f090d61e45ca) {'updated_at': datetime.datetime(2020, 2, 20, 16, 38, 47, 970448), 'created_at': datetime.datetime(2020, 2, 20, 16, 38, 47, 970419), 'id': '079572a6-d77e-4568-82f9-f090d61e45ca'}
-(hbnb) 
-```
-
-- 'update': Updates an instance based on the class name an id by adding or updating attribute.
-```bash
-(hbnb) update BaseModel 079572a6-d77e-4568-82f9-f090d61e45ca name "Betty"
 ```
 
 ## Developers:
