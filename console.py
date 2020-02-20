@@ -1,71 +1,162 @@
 #!/usr/bin/python3
-""" shebang line - defines where the interpreter is located """
+"""This is the console for the Holberton HNBN project"""
+
+
 import cmd
-import shlex
+import sys
+import json
 import models
+import shlex
+from models import Amenity
 from models.base_model import BaseModel
+from models import City
+from models import Place
+from models import State
+from models import storage
+from models import Review
 from models.user import User
-from models.state import State
-from models.city import City
-from models.amenity import Amenity
-from models.place import Place
-from models.review import Review
-""" import moduls """
 
 
 class HBNBCommand(cmd.Cmd):
-    """ class with methods to work into the commands line """
+    """Class HBNB command line console prompt
+       prompt - The start prompt for the HBNB console
+       group - contains all the classes used in the project
+    """
     prompt = "(hbnb) "
-    list_class = ["BaseModel", "User", "State", "City",
-                  "Amenity", "Place", "Review"]
-    list_err = ["** class name missing **", "** class doesn't exist **",
-                "** instance id missing **", "** no instance found **",
-                "** attribute name missing **", "** value missing **"]
+    group = {'BaseModel', 'User', 'State', 'City',
+             'Amenity', 'Place', 'Review'}
+    file_path = storage._FileStorage__file_path
+    err_list = ["** class name missing **", "** class doesn't exist **",
+                    "** instance id missing **", "** no instance found **",
+                    "** attribute name missing **", "** value missing **"]
 
-    def do_create(self, line):
-        """ Create a new instance of BaseModel """
-        my_list = list(line.split())
-        if line == "":
-            print(self.list_err[0])
-        elif my_list[0] in self.list_class:
-            obj = eval(my_list[0])()
-            print(obj.id)
-            obj.save()
+    def err_msg(self, n):
+        """Function to return error messages"""
+        msg_dict = {1: "** class name missing **",
+                    2: "** class doesn't exist **",
+                    3: "** instance id missing **",
+                    4: "** no instance found **",
+                    5: "** attribute name missing **",
+                    6: "** value missing **"
+                    }
+        for key, item in msg_dict.items():
+            if key == n:
+                print(item)
+
+    def do_create(self, arg):
+        """Used to create a new instance of BaseModel and saves
+        the instance to a JSON file"""
+        if arg == "":
+            print(self.err_list[0])
+        elif arg not in self.group:
+            print(self.err_list[1])
         else:
-            print(self.list_err[1])
+            arg = eval(arg)()
+            arg.save()
+            print(arg.id)
 
     def do_show(self, line):
-        """ Show object by id """
-        my_list = list(line.split())
+        """Function to print string representation of instance"""
+        arg = line.split()
         if line == "":
-            print(self.list_err[0])
-        elif my_list[0] not in self.list_class:
-            print(self.list_err[1])
-        elif len(my_list) == 1:
-            print(self.list_err[2])
+            print(self.err_list[0])
+        elif arg[0] not in self.group:
+            print(self.err_list[1])
+        elif len(arg) < 2:
+            print(self.err_list[2])
         else:
-            my_dic = models.storage.all()
-            if (my_list[0] + "." + my_list[1]) in my_dic.keys():
-                print(my_dic[my_list[0] + "." + my_list[1]])
-            else:
-                print(self.list_err[3])
+            data_dump = models.storage.all()
+            key = "{}.{}".format(arg[0], arg[1])
+            try:
+                obj = data_dump[key]
+                print(obj)
+            except KeyError:
+                print(self.err_list[3])
 
     def do_destroy(self, line):
-        """ delete object by id """
-        my_list = list(line.split())
+        """Function to print string representation of instance"""
+        arg = line.split()
         if line == "":
-            print(self.list_err[0])
-        elif my_list[0] not in self.list_class:
-            print(self.list_err[1])
-        elif len(my_list) == 1:
-            print(self.list_err[2])
+            print(self.err_list[0])
+        elif arg[0] not in self.group:
+            print(self.err_list[1])
+        elif len(arg) < 2:
+            print(self.err_list[2])
         else:
-            my_dic = models.storage.all()
-            if (my_list[0] + "." + my_list[1]) in my_dic.keys():
-                del my_dic[my_list[0] + "." + my_list[1]]
-                models.storage.save()
+            data_dump = models.storage.all()
+            key = "{}.{}".format(arg[0], arg[1])
+            if key in data_dump:
+                del data_dump[key]
+                storage._FileStorage__objects = data_dump
+                storage.save()
+                return
+            print(self.err_list[3])
+
+    def do_all(self, line=""):
+        """Function that displays all class instances of given argument or all
+        if no argument given"""
+        data_dump = models.storage.all()
+        if line is "":
+            for instance_key, instance_obj in data_dump.items():
+                print(instance_obj)
+        else:
+            arg = line.split()
+            if arg[0] not in self.group:
+                print(self.err_list[1])
             else:
-                print(self.list_err[3])
+                for instance_key, instance_obj in data_dump.items():
+                    obj = instance_obj.to_dict()
+                    if obj['__class__'] == arg[0]:
+                        print(instance_obj)
+
+    def default(self, line):
+        """Called on an input line when comman prefix is swapped to
+        method of instance"""
+        func = {'create': self.do_create, 'show': self.do_show,
+                'destroy': self.do_destroy, 'count': self.do_count,
+                'all': self.do_all, 'update': self.do_update}
+        symbols = {'"', ',', '{', '}', ':', "'"}
+        sep = line.split('.')
+        command = ""
+        x = 0
+
+        try:
+            while sep[1][x] != '(':
+                command += sep[1][x]
+                x += 1
+            y = len(command) + 1
+            arg = ""
+            while sep[1][y] != ')':
+                if sep[1][y] not in symbols:
+                    arg += sep[1][y]
+                y += 1
+            if arg == "":
+                new_line = "{}".format(sep[0])
+                func[command](new_line)
+            else:
+                p = arg.split(" ")
+                if len(p) == 5:
+                    arg1 = "{} {} {}".format(p[0], p[1], p[2])
+                    arg2 = "{} {} {}".format(p[0], p[3], p[4])
+                    new_line1 = "{} {}".format(sep[0], arg1)
+                    new_line2 = "{} {}".format(sep[0], arg2)
+                    func[command](new_line1)
+                    func[command](new_line2)
+                else:
+                    new_line3 = "{} {}".format(sep[0], arg)
+                    func[command](new_line3)
+        except Exception:
+            print("Invalid command, please try again")
+
+    def do_count(self, arg):
+        """Function to return a count of all instances of a given class"""
+        data_dump = models.storage.all()
+        count = 0
+        for key, item in data_dump.items():
+            obj = item.to_dict()
+            if obj['__class__'] == arg:
+                count += 1
+        print(count)
 
     def splitter(self, line):
         """Function to split line into arguments using shlex"""
@@ -75,61 +166,46 @@ class HBNBCommand(cmd.Cmd):
         lex.commenters = ''
         return list(lex)
 
-    def do_all(self, line):
-        """Function that displays all class instances of given argument or all
-        if no argument given"""
-        dict_temp = models.storage.all()
-        if line is "":
-            list_obj = []
-            for obj_id in dict_temp.keys():
-                obj = dict_temp[obj_id]
-                list_obj.append("{}".format(obj))
-            print(list_obj)
-        else:
-            my_list = line.split()
-            if my_list[0] not in self.list_class:
-                print(self.list_err[1])
-            else:
-                list_obj = []
-                for key, value in dict_temp.items():
-                    if value.__class__.__name__ == my_list[0]:
-                        list_obj.append("{}".format(value))
-                print(list_obj)
+    def do_update(self, line=""):
+        """Updates an instance based on the class name and id by adding or
+        updating attribute and save the change into the JSON file"""
+        data_dump = models.storage.all()
+        arg = self.splitter(line)
+        # arg = line.split()
 
-    def do_update(self, line):
-        """ update an object by className and id, with attribute and value """
-        my_list = self.splitter(line)
-        my_dic = models.storage.all()
-        if line == "":
-            print(self.list_err[0])
-        elif my_list[0] not in self.list_class:
-                print(self.list_err[1])
-        elif len(my_list) < 2:
-                print(self.list_err[2])
+        if not line:
+            print(self.err_msg[0])
+        elif arg[0] not in self.group:
+            print(self.err_msg[1])
+        elif len(arg) < 2:
+            print(self.err_msg[2])
         else:
-            if (my_list[0] + "." + my_list[1]) in my_dic.keys():
-                if len(my_list) < 3:
-                    print(self.list_err[4])
-                elif len(my_list) < 4:
-                    print(self.list_err[5])
+            key = "{}.{}".format(arg[0], arg[1])
+            if key in data_dump:
+                if len(arg) < 3:
+                    print(self.err_msg[4])
+                elif len(arg) < 4:
+                    print(self.err_msg[5])
                 else:
-                    obj_dic = my_dic[my_list[0] + "." + my_list[1]]
-                    setattr(obj_dic, my_list[2], my_list[3].replace("\"", ""))
-                    models.storage.save()
+                    obj = data_dump[key]
+                    setattr(obj, arg[2], arg[3])
             else:
-                print(self.list_err[3])
+                print(self.err_msg[3])
+
+    def emptyline(self):
+        """Called when an empty line is entered
+        Prints the prompt again
+        """
+        pass
 
     def do_quit(self, line):
-        """ Quit command to exit the program """
+        """Quit command to exit the program"""
         return True
 
     def do_EOF(self, line):
-        """ EOF command to exit the program """
+        """Executes the EOF (Ctrl -D/ Ctrl-Z) commands on console"""
         return True
 
-    def emptyline(self):
-        """ When the comand line is empty and it's typed """
-        pass
 
-""" Executed the loop for Promp by default """
-HBNBCommand().cmdloop()
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
