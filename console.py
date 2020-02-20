@@ -98,14 +98,14 @@ class HBNBCommand(cmd.Cmd):
 
     def do_update(self, line):
         """ update an object by className and id, with attribute and value """
-        my_list = self.splitter(line)
-        my_dic = models.storage.all()
+        ist = self.splitter(line)
+        ic = models.storage.all()
         if line == "":
             print(self.list_err[0])
         elif my_list[0] not in self.list_class:
-                print(self.list_err[1])
+            print(self.list_err[1])
         elif len(my_list) < 2:
-                print(self.list_err[2])
+            print(self.list_err[2])
         else:
             if (my_list[0] + "." + my_list[1]) in my_dic.keys():
                 if len(my_list) < 3:
@@ -132,4 +132,5 @@ class HBNBCommand(cmd.Cmd):
         pass
 
 """ Executed the loop for Promp by default """
-HBNBCommand().cmdloop()
+if __name__ == '__main__':
+    HBNBCommand().cmdloop()
