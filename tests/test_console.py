@@ -1,30 +1,26 @@
 #!/usr/bin/python3
-""" shebang line - defines where the interpreter is located """
+"""Unittest for Console"""
+
+
+from console import HBNBCommand
+import sys
 import unittest
-import pep8
-import models
-from models.base_model import BaseModel
-""" import moduls """
+from unittest.mock import create_autospec
 
 
-class verify_pep8(unittest.TestCase):
-    """ class - PEP 8 validated """
-    def test_pep8(self):
-        """ method - PEP 8 test """
-        check = pep8.Checker("console.py", show_source=True)
-        file_error = check.check_all()
-
-
-class verify_work(unittest.TestCase):
-    """ funcionality test """
+class Test_Console(unittest.TestCase):
+    """Console Unittest"""
 
     def setUp(self):
-        """ Method called immediately before calling the test method """
-        pass
+        """Sets up STDIN and STDOUT"""
+        self.mock_stdin = create_autospec(sys.stdin)
+        self.mock_stdout = create_autospec(sys.stdout)
 
-    def tearDown(self):
-        """ Method called immediately after calling the test method """
-        try:
-            remove("file.json")
-        except:
-            pass
+    def create(self, server=None):
+        """Creates HBNBCommand"""
+        return HBNBCommand(stdin=self.mock_stdin, stdout=self.mock_stdout)
+
+    def test_quit(self):
+        """Tests the quit command"""
+        xit = self.create()
+        self.assertTrue(xit.onecmd("quit"))
